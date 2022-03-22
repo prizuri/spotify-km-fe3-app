@@ -1,16 +1,32 @@
 .App {
   text-align: center;
+  border: 1px solid black;
+  margin: 0 auto;
+  width: 70%;
+  margin-top: 40px;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  margin-top: 100px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 2s linear;
+    
   }
+}
+h1{
+  margin-top: 100px;
+}
+button{
+  padding: 10px 40px;
+  background-color: gray;
+  color: white;
+  margin-bottom: 20px;
+
 }
 
 .App-header {
