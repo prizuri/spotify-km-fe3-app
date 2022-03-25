@@ -1,15 +1,15 @@
 import './App.css';
-import data from "./data"
+import song from './components/data-manager';
+import Header from './components/header';
+import ImageSong from './components/image';
+import Paragraph from './components/paragraph';
 
-const imageEl = data.album.images[0].url
-const titleEl = data.name
-const artistEl = data.album.artists[0].name
 function App() {
   return (
     <div className="App" >
-      <img src={imageEl} className="App-logo" alt="bohemian album"/>
-      <h1>{titleEl}</h1>
-      <p>{artistEl}</p>
+      <ImageSong url={song.image}/>
+      <Header text={song.title}/>
+      <Paragraph text={song.artist}/>
       <button>Select</button>
     </div>
   );
