@@ -1,5 +1,8 @@
-export default function Paragraph({text}){
-    return(
-        <p>{text}</p>
+export default function Paragraph({ band, title }) {
+    return (
+        <div>
+            <p>{title}</p>
+            <p>{band}</p>
+        </div>
     )
 }
