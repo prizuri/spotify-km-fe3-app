@@ -6,6 +6,7 @@ import Paragraph from './components/paragraph';
 
 function App() {
   const getData = data.map(value => {
+    //I don't get how to use auth token actually
     return (
       <div>
         <ImageSong key={value.id} url={value.album.images[0].url} />
