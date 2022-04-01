@@ -3,24 +3,38 @@ import data from './components/data-manager/data';
 import Header from './components/header';
 import ImageSong from './components/image';
 import Paragraph from './components/paragraph';
+import axios from "axios"
+import React from "react"
 
 function App() {
-  const getData = data.map(value => {
-    //I don't get how to use auth token actually
-    return (
-      <div>
-        <ImageSong key={value.id} url={value.album.images[0].url} />
-        <Header key={value.id} text={value.album.name} />
-        <Paragraph key={value.id} band={value.album.artists[0].name} title={value.name}/>
-      </div>
+  // const getData = data.map(value => {
+  //   //I don't get how to use auth token actually
+  //   return (
+  //     <div>
+  //       <ImageSong key={value.id} url={value.album.images[0].url} />
+  //       <Header key={value.id} text={value.album.name} />
+  //       <Paragraph key={value.id} band={value.album.artists[0].name} title={value.name}/>
+  //     </div>
+  //   )
+  // })
+  const [query, setQuery] = React.useState("")
+  const [dataSpotify, setDataSpotify] = React.useState([])
 
+  React.useEffect(() => {
+    axios.get("")
+      .then(response => console.log(response.data))
+  }, [])
+  function handleInput(event) {
+    setQuery(event.target.value)
+  }
 
-    )
-  })
   return (
     <div className="App" >
-      {getData}
-      <button>Select</button>
+      {/* {getData} */}
+      <form>
+        <input type="text" onChange={handleInput} />
+        <button>Select</button>
+      </form>
     </div>
   );
 }
