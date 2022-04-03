@@ -5,6 +5,7 @@ import ImageSong from './components/image';
 import Paragraph from './components/paragraph';
 // import axios from "axios"
 import React from "react"
+import Login from "./auth/login/Login"
 
 function App() {
   // const getData = data.map(value => {
@@ -30,20 +31,21 @@ function App() {
     setQuery(event.target.value)
   }
 
-  function requestUserAuthorization(){
-    const client_id=process.env.REACT_APP_SPOTIFY_CLIENT_ID
-    const redirect_uri="https://localhost:3000"
-    const scope="playlist-modify-private"
-    const url=`https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`
-  }
+  // function requestUserAuthorization(){
+  //   const client_id=process.env.REACT_APP_SPOTIFY_CLIENT_ID
+  //   const redirect_uri="https://localhost:3000"
+  //   const scope="playlist-modify-private"
+  //   const url=`https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`
+  // }
   return (
     <div className="App" >
       {/* {getData} */}
-      <button onClick={requestUserAuthorization}>Login</button>
-      <form>
+      {/* <button onClick={requestUserAuthorization}>Login</button> */}
+      <Login/>
+      {/* <form>
         <input type="text" onChange={handleInput} />
         <button>Select</button>
-      </form>
+      </form> */}
     </div>
   );
 }
