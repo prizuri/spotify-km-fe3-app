@@ -5,6 +5,8 @@ export default function Login() {
     const [token, setToken] = useState("")
     const [searchKey, setSearchKey] = useState("")
     const [tracks, setTracks] = useState([])
+    const [isSelect, setIsSelect] = useState(false)
+    const [isUri, setIsUri] = useState("")
     console.log("Render")
 
     //redirect auth to spotify
@@ -46,9 +48,37 @@ export default function Login() {
                 type: "track"
             }
         })
-            .then(response => setTracks(response.data.tracks.items))
+            .then(response => {
+                console.log(response.data.tracks.items)
+                setTracks(response.data.tracks.items)
+            })
             .catch(setTracks([]))
     }
+    // function handleButtonState(uri) {
+    //     if (!isSelect) {
+    //         window.localStorage.setItem("uri", uri)
+    //     } else {
+    //         window.localStorage.removeItem("uri")
+    //     }
+    //     handleSelect()
+    // }
+    // function handleUri(){
+    //     const uri = window.localStorage.getItem("uri")
+    //     if (uri){
+
+    //     }
+    // }
+    function handleSelect() {
+        if (!isSelect) {
+            // window.localStorage.setItem("uri", uri)
+            setIsSelect(true)
+
+        } else {
+            // window.localStorage.removeItem("uri")
+            setIsSelect(false)
+        }
+    }
+
 
     return (
         <div>
@@ -67,13 +97,16 @@ export default function Login() {
                         {tracks.length !== 0 &&
                             tracks.map(track => {
                                 return (
-                                    <div key={track.id}>
+                                    <div key={track.uri}>
                                         <img width="25%" src={track.album.images[0].url} alt="" />
                                         <h2>{track.name}</h2>
                                         <h2>{track.album.artists[0].name}</h2>
+                                        {isSelect ? <button onClick={handleSelect}>Deselect</button> : <button onClick={handleSelect}>Select</button>}
                                     </div>
                                 )
-                            })}
+                            })
+                        }
+
                     </div>
 
                     : <h2>Please Login</h2>
