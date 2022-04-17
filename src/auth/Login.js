@@ -21,7 +21,7 @@ export default function Login() {
             window.localStorage.setItem("token", token)
         }
         setToken(token)
-    }, [])
+    }, [userID])
 
     function handleLogout() {
         setToken("")
@@ -54,11 +54,13 @@ export default function Login() {
             .then(response => {
                 setUserID(response.data.id)
             })
+        console.log(userID)
     }
 
     //ERROR 401 CODE
     async function createPlaylist(event) {
         event.preventDefault()
+        console.log("token before fetch 'post':", token)
         await axios.post(`https://api.spotify.com/v1/users/${userID}/playlists`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -72,7 +74,7 @@ export default function Login() {
         })
             .then(response => {
                 console.log(response)
-            })
+            }).catch(error=> console.log(error))
 
 
     }
