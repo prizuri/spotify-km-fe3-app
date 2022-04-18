@@ -4,12 +4,19 @@ import Form from "../components/Form/Form"
 import Giphy from "../components/Giphy/Giphy"
 import { handleLogin } from "./handleLogin"
 import CreatePlaylistForm from "../components/Form/CreatePlaylist"
+// import cors from "cors"
 
 export default function Login() {
     const [token, setToken] = useState("")
     const [searchKey, setSearchKey] = useState("")
     const [tracks, setTracks] = useState([])
     const [isSelect, setIsSelect] = useState({})
+    // const [uris, setUris] = useState("")
+    let uri = ""
+    const [playlistID, setPlaylistID] = useState("")
+    const [playlistForm, setPlaylistForm] = useState({
+        title: "", description: ""
+    })
     const [userID, setUserID] = useState("")
 
     useEffect(() => {
@@ -21,7 +28,7 @@ export default function Login() {
             window.localStorage.setItem("token", token)
         }
         setToken(token)
-    }, [userID])
+    }, [])
 
     function handleLogout() {
         setToken("")
@@ -30,7 +37,9 @@ export default function Login() {
 
     async function searchTrack(event) {
         event.preventDefault()
-        await axios.get("https://api.spotify.com/v1/search", {
+        await axios({
+            method: "GET",
+            url: "https://api.spotify.com/v1/search",
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
@@ -45,38 +54,59 @@ export default function Login() {
             })
             .catch(setTracks([]))
     }
-    async function getCurrentUserID() {
-        await axios.get("https://api.spotify.com/v1/me", {
+    async function handleCurrentUserID() {
+        await axios({
+            method: "GET",
+            url: "https://api.spotify.com/v1/me",
             headers: {
                 Authorization: `Bearer ${token}`
             }
+        }).then(response => {
+            setUserID(response.data.id)
         })
-            .then(response => {
-                setUserID(response.data.id)
-            })
-        console.log(userID)
     }
 
-    //ERROR 401 CODE
     async function createPlaylist(event) {
         event.preventDefault()
-        console.log("token before fetch 'post':", token)
-        await axios.post(`https://api.spotify.com/v1/users/${userID}/playlists`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: {
-                "name": "New Playldasadsasist",
-                "description": "New playlist description",
+        await axios({
+            method: "post",
+            url: `https://api.spotify.com/v1/users/${userID}/playlists`,
+            data: {
+                "name": playlistForm.title,
+                "description": playlistForm.description,
                 "public": false,
                 "collaborative": false
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            setPlaylistID(response.data.id)
+            console.log(playlistID)
+        })
+    }
+    async function handleAddItemPlaylist(trackUris) {
+        await axios({
+            method: "POST",
+            url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+            params: {
+                uris: uri,
+                position: 0
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(setIsSelect({ ...isSelect, [trackUris]: true }))
+
+    }
+
+    function handlePlaylistForm(event) {
+        setPlaylistForm(prevForm => {
+            return {
+                ...prevForm,
+                [event.target.name]: event.target.value
             }
         })
-            .then(response => {
-                console.log(response)
-            }).catch(error=> console.log(error))
-
-
     }
     return (
         <div>
@@ -88,8 +118,8 @@ export default function Login() {
             {
                 (window.localStorage.getItem("token")) ?
                     <div>
-                        <button onClick={getCurrentUserID}>Get User ID</button>
-                        <CreatePlaylistForm submit={createPlaylist} />
+                        <button onClick={handleCurrentUserID}>Get Current User ID</button>
+                        <CreatePlaylistForm submit={createPlaylist} value={e => e.target.value} onChange={handlePlaylistForm} />
                         <Form searchTrack={searchTrack} setSearchKey={e => setSearchKey(e.target.value)} />
                         {tracks.length !== 0 &&
                             tracks.map(track => {
@@ -98,7 +128,8 @@ export default function Login() {
                                         <Giphy key={track.uri} url={track.album.images[0].url} name={track.name} album={track.album.artists[0].name} />
                                         {!isSelect[track.uri] ?
                                             <button onClick={() => {
-                                                setIsSelect({ ...isSelect, [track.uri]: true })
+                                                uri = track.uri
+                                                handleAddItemPlaylist(uri)
                                             }}>Select</button>
                                             : <button onClick={() => {
                                                 setIsSelect({ ...isSelect, [track.uri]: false })
